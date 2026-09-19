@@ -19,7 +19,8 @@ config = context.config
 
 # Pull the DB URL from our .env-backed settings instead of alembic.ini,
 # so there's exactly one place that defines DATABASE_URL.
-config.set_main_option("sqlalchemy.url", settings.database_url)
+# "%" is special to ConfigParser, so escape it or a percent-encoded password breaks the migration.
+config.set_main_option("sqlalchemy.url", settings.database_url.replace("%", "%%"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

@@ -1,12 +1,22 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import audio, calls, review
 from app.config import settings
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    settings.ensure_storage_dirs()
+    yield
+
+
 app = FastAPI(
     title=settings.app_name,
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

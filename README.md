@@ -77,3 +77,26 @@ TranscriptSegment → CheckResult → GateDecision → Override`
 Get versioning (`effective_from`/`effective_to`) and the four-status enum
 (`PASS / FAIL / LOW_CONFIDENCE / NOT_CHECKABLE`) right in this pass —
 retrofitting either later is expensive.
+
+
+## Deploying the backend to Render
+
+Web Service, **Root Directory** `backend`. Only `DATABASE_URL` is required; every other setting has a default
+(full list in `backend/.env.example`).
+
+| Setting | Value |
+|---|---|
+| Build Command | `pip install -r requirements.txt` |
+| Start Command | `uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| Pre-Deploy Command (migrations) | `alembic upgrade head` |
+| Health Check Path | `/health` |
+| `DATABASE_URL` (required) | the **Internal Database URL** of your Render Postgres (`postgres://` / `postgresql://` are fine) |
+| `PYTHON_VERSION` | a version Render supports, 3.10 or newer |
+| `CORS_ORIGINS` | only if a separately hosted frontend calls the API by absolute URL, e.g. `["https://your-frontend.onrender.com"]` |
+| `AUDIO_STORAGE_PATH` | optional; default `/tmp/audio` is **ephemeral** on Render (recordings vanish on restart/deploy), so attach a Disk and set e.g. `/var/data/audio` if they must persist |
+
+If your plan has no Pre-Deploy Command, run the migration once from your machine with the database's **External**
+URL: `cd backend`, set `DATABASE_URL` to it (PowerShell `$env:DATABASE_URL="..."`), then `alembic upgrade head`.
+
+A fresh database has no retailers, so seed one once the same way:
+`python scripts/load_check_library.py data/fixtures/retailer1_check_library_v2.json` (demo library: synthetic wording).

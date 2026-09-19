@@ -8,6 +8,11 @@ class Settings(BaseSettings):
 
     database_url: str
 
+    # Browser origins allowed to call the API directly (the Vite dev server). Not needed when the frontend
+    # goes through Vite's /api proxy; needed if VITE_API_BASE points at the backend. Override with a JSON
+    # list in CORS_ORIGINS.
+    cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+
     audio_storage_path: str
     transcript_storage_path: str
 

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import LeadReview from './components/LeadReview.jsx'
+import UploadCall from './components/UploadCall.jsx'
 
-// /calls/123/review shows call 123; anything else shows a box to enter a call id.
+// /calls/123/review shows call 123; anything else shows the upload page (and a box to open an existing call).
 function callIdFromLocation(): string | null {
   const match = window.location.pathname.match(/^\/calls\/(\d+)\/review\/?$/)
   return match ? match[1] : new URLSearchParams(window.location.search).get('call')
@@ -17,29 +18,34 @@ function App() {
     return () => window.removeEventListener('popstate', onNavigate)
   }, [])
 
+  const openCall = (id: string | number) => {
+    window.history.pushState({}, '', `/calls/${id}/review`)
+    setCallId(String(id))
+  }
+
   if (callId) return <LeadReview callId={callId} />
 
   return (
-    <form
-      className="open-call"
-      onSubmit={(event) => {
-        event.preventDefault()
-        const id = draft.trim()
-        if (!/^\d+$/.test(id)) return
-        window.history.pushState({}, '', `/calls/${id}/review`)
-        setCallId(id)
-      }}
-      style={{ maxWidth: '24rem', margin: '4rem auto', padding: '0 1rem' }}
-    >
-      <h1 style={{ fontSize: '1.25rem' }}>Open a call review</h1>
-      <label>
-        Call ID{' '}
-        <input value={draft} onChange={(event) => setDraft(event.target.value)} inputMode="numeric" autoFocus />
-      </label>{' '}
-      <button type="submit" disabled={!/^\d+$/.test(draft.trim())}>
-        Open
-      </button>
-    </form>
+    <>
+      <UploadCall onOpenCall={openCall} />
+      <form
+        className="open-call"
+        onSubmit={(event) => {
+          event.preventDefault()
+          const id = draft.trim()
+          if (/^\d+$/.test(id)) openCall(id)
+        }}
+        style={{ maxWidth: '34rem', margin: '0 auto 3rem', padding: '0 1rem' }}
+      >
+        <label>
+          Or open an existing call by ID:{' '}
+          <input value={draft} onChange={(event) => setDraft(event.target.value)} inputMode="numeric" />
+        </label>{' '}
+        <button type="submit" disabled={!/^\d+$/.test(draft.trim())}>
+          Open
+        </button>
+      </form>
+    </>
   )
 }
 

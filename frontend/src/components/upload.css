@@ -1,0 +1,49 @@
+/* Upload page. Same look as the review page; colours from variables so light and dark stay readable. */
+.upload {
+  --ink: #0f172a;
+  --ink-soft: #475569;
+  --panel: #ffffff;
+  --panel-border: #d9dee7;
+  --fail: #b91c1c;
+  --fail-bg: #fee2e2;
+  --pass: #15803d;
+  --pass-bg: #dcfce7;
+  --info: #1d4ed8;
+  --info-bg: #dbeafe;
+
+  max-width: 34rem;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  color: var(--ink);
+  text-align: left;
+}
+
+@media (prefers-color-scheme: dark) {
+  .upload {
+    --ink: #f1f5f9;
+    --ink-soft: #cbd5e1;
+    --panel: #111827;
+    --panel-border: #334155;
+    --fail: #f87171;
+    --fail-bg: #450a0a;
+    --pass: #4ade80;
+    --pass-bg: #052e16;
+    --info: #93c5fd;
+    --info-bg: #172554;
+  }
+}
+
+.upload__title { font-size: 1.25rem; margin: 0 0 1rem; }
+.upload__form { display: grid; gap: 0.9rem; padding: 1rem; background: var(--panel); border: 1px solid var(--panel-border); border-radius: 0.6rem; }
+.upload__field { display: grid; gap: 0.25rem; }
+.upload__field span { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+.upload__field input { padding: 0.5rem 0.6rem; border: 1px solid var(--panel-border); border-radius: 0.4rem; background: transparent; color: inherit; }
+.upload__field input:disabled { opacity: 0.6; }
+.upload__file { margin: 0; font-size: 0.9rem; color: var(--ink-soft); }
+.upload__submit { padding: 0.6rem 1rem; font-weight: 700; color: #fff; background: var(--info); border: 0; border-radius: 0.4rem; cursor: pointer; }
+.upload__submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.upload__status { margin: 1rem 0 0; padding: 0.75rem 1rem; border-radius: 0.5rem; background: var(--info-bg); color: var(--info); }
+.upload__status p { margin: 0 0 0.5rem; }
+.upload__status--ok { background: var(--pass-bg); color: var(--pass); }
+.upload__status--error { background: var(--fail-bg); color: var(--fail); font-weight: 600; }
+.upload__status--error button { font: inherit; padding: 0.35rem 0.75rem; cursor: pointer; }

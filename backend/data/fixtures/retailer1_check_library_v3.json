@@ -1,0 +1,79 @@
+{
+  "retailer": {
+    "code": "retailer1",
+    "name": "Retailer 1"
+  },
+  "library": {
+    "name": "Retailer 1 check library v3 (demo - DMO script and retailer plan still REQUIRED; not the retailer's real export)",
+    "version": 3,
+    "effective_from": "2026-09-19T09:50:00+00:00",
+    "effective_to": null
+  },
+  "checks": [
+    {
+      "code": "recording_disclaimer",
+      "name": "Recording disclaimer",
+      "description": "Consent is a check, not an assumption: the recording disclaimer must be read on every call. Source: handout p.4-5, p.7. The required phrase is ILLUSTRATIVE wording that matches the synthetic transcript; it is NOT the retailer's approved disclaimer script and must be replaced with it.",
+      "check_type": "VERBATIM",
+      "critical": true,
+      "configuration": {
+        "required_phrases": ["this call is recorded for quality and compliance purposes"],
+        "match_threshold": 0.9
+      }
+    },
+    {
+      "code": "dmo_verbatim",
+      "name": "DMO read verbatim (retailer-approved script required)",
+      "description": "The DMO must be read verbatim (handout p.4-5). The retailer-approved DMO wording is NOT in this repository, so none is configured: this check reports NOT_CHECKABLE (a human reviews it) instead of failing every call against invented text. To activate it, set required_phrases to the approved wording (a list of strings) and match_threshold (0 < t <= 1) in a NEW library version.",
+      "check_type": "VERBATIM",
+      "critical": true,
+      "configuration": {
+        "note": "REQUIRED: supply the retailer-approved DMO script as required_phrases and its match_threshold. Nothing is guessed."
+      }
+    },
+    {
+      "code": "rate_match",
+      "name": "Rates and charges match plan",
+      "description": "The rate the agent quotes must equal the rate on the retailer's plan / rate card (handout p.4-5; critical). The application has NO retailer plan / rate-card data source yet (retailer_plan is always empty), so this reports NOT_CHECKABLE until one exists. 'RETAILER_PLAN.rate' is the intended path; the key name must be confirmed when the plan data is defined.",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "field": "rate",
+        "source_of_truth": "RETAILER_PLAN.rate"
+      }
+    },
+    {
+      "code": "email_match",
+      "name": "Email captured matches CRM",
+      "description": "The email read back must match the lead's CRM email (handout p.4-5; critical). Reads the CRM snapshot key 'email' of the lead's crm_fields; NOT_CHECKABLE when the lead has no CRM snapshot.",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "field": "email",
+        "source_of_truth": "CRM.email"
+      }
+    },
+    {
+      "code": "dob_match",
+      "name": "Date of birth matches CRM",
+      "description": "The DOB stated on the call must match the lead's CRM date of birth (handout p.4; factual checks block the sale, so critical). Reads the CRM snapshot key 'dob' of the lead's crm_fields; NOT_CHECKABLE when the lead has no CRM snapshot.",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "field": "dob",
+        "source_of_truth": "CRM.dob"
+      }
+    },
+    {
+      "code": "dead_air",
+      "name": "Dead air",
+      "description": "Coaching note only; never blocks the sale. Source: handout p.4-5 (non-critical). The 10 second threshold is an ILLUSTRATIVE demo value, not a retailer rule.",
+      "check_type": "BEHAVIOUR",
+      "critical": false,
+      "configuration": {
+        "signal": "dead_air",
+        "threshold_seconds": 10
+      }
+    }
+  ]
+}

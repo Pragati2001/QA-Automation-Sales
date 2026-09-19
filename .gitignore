@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+node_modules/
+data/audio/raw/*
+data/audio/redacted/*
+!data/audio/raw/.gitkeep
+!data/audio/redacted/.gitkeep
+dist/
+.DS_Store

@@ -1,0 +1,76 @@
+{
+  "retailer": {
+    "code": "retailer1",
+    "name": "Retailer 1"
+  },
+  "library": {
+    "name": "Retailer 1 check library v1 (demo - derived from QA Automation handout, not the retailer's real export)",
+    "version": 1,
+    "effective_from": "2026-01-01T00:00:00+00:00",
+    "effective_to": null
+  },
+  "checks": [
+    {
+      "code": "recording_disclaimer",
+      "name": "Recording disclaimer",
+      "description": "Consent is a check, not an assumption: the recording disclaimer must be verified as read on every call. Source: handout p.4 (type A), p.5 worked example (critical, verbatim match), p.7.",
+      "check_type": "VERBATIM",
+      "critical": true,
+      "configuration": {
+        "approved_script": null
+      }
+    },
+    {
+      "code": "dmo_verbatim",
+      "name": "DMO read verbatim",
+      "description": "The DMO must be read verbatim. Source: handout p.4 (type A, DMO/VDO), p.5 worked example (critical).",
+      "check_type": "VERBATIM",
+      "critical": true,
+      "configuration": {
+        "approved_script": null
+      }
+    },
+    {
+      "code": "rate_match",
+      "name": "Rates and charges match plan",
+      "description": "The rate the agent quotes must equal the rate on the lead's plan. Source: handout p.4 (type B, rate quoted = rate on plan), p.5 worked example (critical; peak rate).",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "compare_to": "retailer_plan_and_rate_card"
+      }
+    },
+    {
+      "code": "email_match",
+      "name": "Email captured matches CRM",
+      "description": "The email the agent reads back must match the CRM email field. Source: handout p.4 (type B), p.5 worked example (critical).",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "compare_to": "crm_field",
+        "field": "email"
+      }
+    },
+    {
+      "code": "dob_match",
+      "name": "Date of birth matches CRM",
+      "description": "The DOB stated on the call must match the CRM date-of-birth field. Source: handout p.4 (type B lists DOB; factual checks block the sale, so critical). DOB does not appear in the p.5 worked example.",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "compare_to": "crm_field",
+        "field": "dob"
+      }
+    },
+    {
+      "code": "dead_air",
+      "name": "Dead air",
+      "description": "Coaching note only; never blocks the sale. Source: handout p.4 (type C, blocks sale: No), p.5 worked example (non-critical).",
+      "check_type": "BEHAVIOUR",
+      "critical": false,
+      "configuration": {
+        "threshold_seconds": null
+      }
+    }
+  ]
+}

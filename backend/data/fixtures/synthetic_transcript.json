@@ -1,0 +1,18 @@
+{
+  "description": "SYNTHETIC test transcript for development. All names, contact details and figures are made up, and the wording is illustrative only - it is not any retailer's approved script. Values line up with the demo lead's CRM snapshot (email synthetic.test@example.com, dob 1990-01-01, peak rate 31.9c/kWh).",
+  "segments": [
+    {"speaker": "AGENT", "text": "Good afternoon, thanks for calling. Just so you know, this call is recorded for quality and compliance purposes.", "start_time": 0.0, "end_time": 7.4, "confidence": 0.97},
+    {"speaker": "CUSTOMER", "text": "Okay, that's fine.", "start_time": 7.9, "end_time": 9.6, "confidence": 0.95},
+    {"speaker": "AGENT", "text": "Could you please confirm you are the account holder?", "start_time": 10.2, "end_time": 13.5, "confidence": 0.98},
+    {"speaker": "CUSTOMER", "text": "Yes, I'm the account holder.", "start_time": 14.0, "end_time": 16.1, "confidence": 0.96},
+    {"speaker": "AGENT", "text": "Thank you. And can you confirm your date of birth for me?", "start_time": 16.8, "end_time": 20.9, "confidence": 0.97},
+    {"speaker": "CUSTOMER", "text": "It's the first of January, nineteen ninety.", "start_time": 21.4, "end_time": 24.8, "confidence": 0.93},
+    {"speaker": "AGENT", "text": "Great. On this plan the peak rate is thirty one point nine cents per kilowatt hour.", "start_time": 26.0, "end_time": 33.2, "confidence": 0.94},
+    {"speaker": "CUSTOMER", "text": "Right, that sounds okay. Let me just check something, one moment.", "start_time": 33.9, "end_time": 38.0, "confidence": 0.95},
+    {"speaker": "AGENT", "text": "And what email address should we send the confirmation to?", "start_time": 85.0, "end_time": 88.6, "confidence": 0.97},
+    {"speaker": "CUSTOMER", "text": "It's synthetic dot test at example dot com.", "start_time": 89.2, "end_time": 93.1, "confidence": 0.62},
+    {"speaker": "AGENT", "text": "Let me read that back to you: synthetic dot test at example dot com, is that right?", "start_time": 93.8, "end_time": 100.2, "confidence": 0.9},
+    {"speaker": "CUSTOMER", "text": "Yes, that's it. Yes, thank you.", "start_time": 99.6, "end_time": 102.4, "confidence": 0.94},
+    {"speaker": "AGENT", "text": "Perfect, you'll receive that shortly. Thanks for your time today.", "start_time": 103.0, "end_time": 107.5, "confidence": 0.98}
+  ]
+}

@@ -1,0 +1,20 @@
+fastapi
+uvicorn[standard]
+
+sqlalchemy
+psycopg[binary]
+alembic
+
+pydantic-settings
+
+httpx
+python-multipart
+
+pytest
+pytest-asyncio
+
+# NOT included yet, add only when a decision is made:
+#   celery, redis        -> when BackgroundTasks proves insufficient
+#   azure-storage-blob    -> when moving off local filesystem
+#   openai / anthropic     -> when extraction provider is chosen
+#   azure-cognitiveservices-speech -> when STT provider is chosen

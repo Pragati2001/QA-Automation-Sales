@@ -66,7 +66,7 @@ flowchart LR
     R4 --> FS
 ```
 
-In development the Vite server proxies `/api` to the backend, so the browser only ever talks to `localhost:5173`.
+In development the Vite server proxies `/api` to the backend, so the browser only ever talks to the Vite server (port 5173).
 
 ## Repository structure
 
@@ -242,15 +242,16 @@ source .venv/bin/activate            # Windows PowerShell: .venv\Scripts\Activat
 pip install -r requirements.txt
 
 cp .env.example .env                 # Windows: copy .env.example .env
-# .env already points at postgresql+psycopg://qa_user:qa_password@localhost:5432/qa_automation;
-# edit DATABASE_URL if your user, password, port or database name differ.
+# .env already holds a DATABASE_URL for the qa_user role and qa_automation database created in step 1
+# (a postgresql+psycopg:// URL on the default Postgres port 5432); edit it if your user, password,
+# host, port or database name differ.
 
 alembic upgrade head                 # create the tables
 python scripts/load_check_library.py data/fixtures/retailer1_check_library_v2.json   # seed one retailer + its checks
 uvicorn app.main:app --reload
 ```
 
-Check it: <http://localhost:8000/health> and the interactive docs at <http://localhost:8000/docs>.
+Check it: the backend (port 8000) answers on `/health`, and serves interactive docs on `/docs`.
 
 `data/fixtures/` holds several versions (v1 to v4) of the demo library for `retailer1`. **Load only one on a fresh
 database**: they are all open-ended, so two at once overlap and the lookup refuses to guess. v2 is a good first choice:
@@ -265,7 +266,7 @@ npm install
 npm run dev
 ```
 
-Open <http://localhost:5173>. The dev server proxies `/api` to `http://127.0.0.1:8000` (override with the
+Open the address Vite prints (port 5173). The dev server proxies `/api` to the backend on port 8000 (set the
 `VITE_BACKEND_URL` environment variable if your backend runs elsewhere).
 
 ### 4. Score your first call
@@ -277,7 +278,8 @@ Open <http://localhost:5173>. The dev server proxies `/api` to `http://127.0.0.1
 **From the command line**, which also lets you supply the CRM values the factual checks compare against:
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/calls \
+# BACKEND_URL = the address the backend listens on (port 8000)
+curl -X POST "$BACKEND_URL/api/v1/calls" \
   -F retailer_code=retailer1 \
   -F external_lead_id=2334334 \
   -F 'crm_fields={"email":"synthetic.test@example.com","dob":"1990-01-01","rate":"31.9c/kWh"}' \
@@ -286,8 +288,8 @@ curl -X POST http://localhost:8000/api/v1/calls \
 ```
 
 (PowerShell: use `curl.exe`, and put the JSON in a variable to avoid quoting problems.) Then open
-<http://localhost:5173/calls/42/review>. Without `crm_fields` the factual checks correctly report `NOT_CHECKABLE`,
-because there is nothing to compare against.
+`/calls/42/review` on the frontend (the same address you opened above). Without `crm_fields` the factual checks
+correctly report `NOT_CHECKABLE`, because there is nothing to compare against.
 
 ### 5. Run the tests
 
@@ -428,7 +430,7 @@ Backend settings come from environment variables or `backend/.env` (see `backend
 | `TRANSCRIPT_STORAGE_PATH` | `/tmp/transcripts` | Where transcripts are stored |
 | `CORS_ORIGINS` | the Vite dev origins | JSON list of browser origins allowed to call the API directly |
 
-Frontend: `VITE_BACKEND_URL` (dev-server proxy target, default `http://127.0.0.1:8000`) and `VITE_API_BASE` (call a
+Frontend: `VITE_BACKEND_URL` (dev-server proxy target, default: the backend on port 8000 on this machine) and `VITE_API_BASE` (call a
 backend on another origin by absolute URL instead of using the proxy; that backend's `CORS_ORIGINS` must include the
 frontend's origin).
 

@@ -130,15 +130,15 @@ FILLER = {"signal": "filler_ratio", "max_ratio": 0.1}
 
 def test_filler_words_above_the_limit_are_a_coaching_note_with_the_worst_segments_as_evidence():
     segments = [
-        seg(1, AGENT, "Um, so uh the peak rate is um thirty one point nine", 0, 7),       # 3 fillers of 11 words
+        seg(1, AGENT, "Um, so uh the peak rate is um thirty one point nine", 0, 7),       # 3 fillers of 12 words
         seg(2, CUSTOMER, "Um okay uh right", 7, 9),                                          # customer: ignored
-        seg(3, AGENT, "That is a good plan for you and your family today", 10, 14),        # 0 fillers
+        seg(3, AGENT, "That is a good plan for you and your family today", 10, 14),        # 0 fillers, 11 words
     ]
     result = evaluate(FILLER, segments)
 
     assert result.status is CheckStatus.PASS
     assert result.reason.startswith("Coaching note") and "above the 10.0% limit" in result.reason
-    assert result.actual_value == "15.0% (3 of 20 words)"  # the customer's fillers are not counted
+    assert result.actual_value == "13.0% (3 of 23 words)"  # 12 + 11 agent words; the customer's fillers are not counted
     assert result.expected_value == "at most 10.0% filler words"
     assert evidence_of(result) == [("1", 0, 7, "Um, so uh the peak rate is um thirty one point nine")]
 
@@ -158,9 +158,16 @@ def test_words_that_merely_contain_a_filler_are_not_fillers():
 def test_filler_words_and_speaker_are_configurable():
     segments = [seg(1, AGENT, "basically like you know it is fine", 0, 3), seg(2, CUSTOMER, "um basically yes", 3, 5)]
     only_basically = evaluate({**FILLER, "filler_words": ["basically"], "speaker": "any"}, segments)
-    assert only_basically.actual_value == "25.0% (2 of 8 words)"
+    assert only_basically.actual_value == "20.0% (2 of 10 words)"  # both speakers' words, "basically" twice
     customer = evaluate({**FILLER, "speaker": "customer"}, segments)
     assert customer.actual_value == "33.3% (1 of 3 words)"
+
+
+def test_a_max_ratio_of_zero_is_a_valid_strict_setting():
+    """0 means "no filler words at all": any filler is flagged, and it is still only a coaching note."""
+    result = evaluate({**FILLER, "max_ratio": 0}, [seg(1, AGENT, "well um hello there", 0, 3)])
+    assert result.status is CheckStatus.PASS and result.reason.startswith("Coaching note")
+    assert not evaluate({**FILLER, "max_ratio": 0}, [seg(1, AGENT, "hello there", 0, 3)]).reason.startswith("Coaching")
 
 
 def test_filler_ratio_needs_some_speech_from_the_chosen_speaker():
@@ -172,7 +179,7 @@ def test_filler_ratio_needs_some_speech_from_the_chosen_speaker():
 
 @pytest.mark.parametrize("config", [
     {"signal": "filler_ratio"},
-    {"signal": "filler_ratio", "max_ratio": 0},
+    {"signal": "filler_ratio", "max_ratio": -0.1},
     {"signal": "filler_ratio", "max_ratio": 1.5},
     {"signal": "filler_ratio", "max_ratio": 0.1, "filler_words": []},
     {"signal": "filler_ratio", "max_ratio": 0.1, "filler_words": ["you know"]},

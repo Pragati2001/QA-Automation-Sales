@@ -1,0 +1,80 @@
+{
+  "retailer": {
+    "code": "retailer1",
+    "name": "Retailer 1"
+  },
+  "library": {
+    "name": "Retailer 1 check library v2 (demo - usable config, SYNTHETIC wording; not the retailer's real export)",
+    "version": 2,
+    "effective_from": "2026-09-19T07:15:00+00:00",
+    "effective_to": null
+  },
+  "checks": [
+    {
+      "code": "recording_disclaimer",
+      "name": "Recording disclaimer",
+      "description": "Consent is a check, not an assumption: the recording disclaimer must be read on every call. Source: handout p.4-5, p.7. The required phrase is ILLUSTRATIVE wording that matches the synthetic transcript; it is not the retailer's approved script.",
+      "check_type": "VERBATIM",
+      "critical": true,
+      "configuration": {
+        "required_phrases": ["this call is recorded for quality and compliance purposes"],
+        "match_threshold": 0.9
+      }
+    },
+    {
+      "code": "dmo_verbatim",
+      "name": "DMO read verbatim",
+      "description": "The DMO must be read verbatim. Source: handout p.4-5. The required phrase is a SYNTHETIC PLACEHOLDER, not the retailer's real DMO script, and the synthetic transcript contains no DMO wording, so on the demo call this check FAILS by design (wrong or absent script), which is different from NOT_CHECKABLE (missing config). Replace it with the real wording, and use a transcript that contains it, to see a PASS.",
+      "check_type": "VERBATIM",
+      "critical": true,
+      "configuration": {
+        "required_phrases": ["this is a synthetic placeholder for the retailer's default market offer script"],
+        "match_threshold": 0.9
+      }
+    },
+    {
+      "code": "rate_match",
+      "name": "Rates and charges match plan",
+      "description": "The rate the agent quotes must equal the rate on the lead's plan, read from the lead's CRM snapshot key 'rate' (there is no separate retailer-plan source yet). Source: handout p.4-5 (critical; peak rate).",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "field": "rate",
+        "source_of_truth": "CRM.rate"
+      }
+    },
+    {
+      "code": "email_match",
+      "name": "Email captured matches CRM",
+      "description": "The email read back must match the CRM snapshot key 'email'. Source: handout p.4-5 (critical).",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "field": "email",
+        "source_of_truth": "CRM.email"
+      }
+    },
+    {
+      "code": "dob_match",
+      "name": "Date of birth matches CRM",
+      "description": "The DOB stated on the call must match the CRM snapshot key 'dob'. Source: handout p.4 (factual checks block the sale, so critical).",
+      "check_type": "FACTUAL",
+      "critical": true,
+      "configuration": {
+        "field": "dob",
+        "source_of_truth": "CRM.dob"
+      }
+    },
+    {
+      "code": "dead_air",
+      "name": "Dead air",
+      "description": "Coaching note only; never blocks the sale. Source: handout p.4-5 (non-critical). The 10 second threshold is an ILLUSTRATIVE demo value, not a retailer rule.",
+      "check_type": "BEHAVIOUR",
+      "critical": false,
+      "configuration": {
+        "signal": "dead_air",
+        "threshold_seconds": 10
+      }
+    }
+  ]
+}
